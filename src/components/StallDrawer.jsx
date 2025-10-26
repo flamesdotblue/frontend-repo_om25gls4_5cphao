@@ -1,6 +1,6 @@
 import { X, Star, Clock } from "lucide-react";
 
-export default function StallDrawer({ open, onClose, court }) {
+export default function StallDrawer({ open, onClose, court, onViewStall }) {
   return (
     <div
       className={`fixed inset-0 z-50 ${open ? "pointer-events-auto" : "pointer-events-none"}`}
@@ -32,7 +32,11 @@ export default function StallDrawer({ open, onClose, court }) {
               <h4 className="text-sm font-semibold text-gray-900">Stalls</h4>
               <div className="mt-3 space-y-3">
                 {court.stalls.map((stall, idx) => (
-                  <div key={idx} className="p-3 border border-gray-100 rounded-xl hover:shadow-sm transition">
+                  <button
+                    key={idx}
+                    className="w-full text-left p-3 border border-gray-100 rounded-xl hover:shadow-sm transition"
+                    onClick={() => onViewStall && onViewStall(stall, court)}
+                  >
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="font-medium text-gray-900">{stall.name}</div>
@@ -49,9 +53,9 @@ export default function StallDrawer({ open, onClose, court }) {
                           </span>
                         </div>
                       </div>
-                      <button className="self-start px-3 py-1.5 rounded-lg bg-gray-900 text-white text-sm hover:bg-gray-800">Order</button>
+                      <span className="self-start px-3 py-1.5 rounded-lg bg-gray-900 text-white text-sm">View</span>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

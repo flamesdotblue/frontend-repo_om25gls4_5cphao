@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import FoodCourtGrid from "./components/FoodCourtGrid";
 import StallDrawer from "./components/StallDrawer";
+import StallPage from "./components/StallPage";
 
 const SAMPLE_DATA = [
   {
@@ -123,8 +124,10 @@ const SAMPLE_DATA = [
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState(null);
+  const [selectedCourt, setSelectedCourt] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedStall, setSelectedStall] = useState(null);
+  const [view, setView] = useState("home");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -143,18 +146,41 @@ export default function App() {
   }, [query]);
 
   const openDrawer = (court) => {
-    setSelected(court);
+    setSelectedCourt(court);
     setDrawerOpen(true);
   };
 
   const closeDrawer = () => setDrawerOpen(false);
 
+  const handleViewStall = (stall, court) => {
+    setSelectedStall(stall);
+    setSelectedCourt(court);
+    setDrawerOpen(false);
+    setView("stall");
+  };
+
+  const backToHome = () => {
+    setView("home");
+    setSelectedStall(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 text-gray-900">
       <Navbar />
-      <Hero query={query} setQuery={setQuery} />
-      <FoodCourtGrid courts={filtered} onSelect={openDrawer} />
-      <StallDrawer open={drawerOpen} onClose={closeDrawer} court={selected} />
+      {view === "home" ? (
+        <>
+          <Hero query={query} setQuery={setQuery} />
+          <FoodCourtGrid courts={filtered} onSelect={openDrawer} />
+          <StallDrawer
+            open={drawerOpen}
+            onClose={closeDrawer}
+            court={selectedCourt}
+            onViewStall={handleViewStall}
+          />
+        </>
+      ) : (
+        <StallPage stall={selectedStall} court={selectedCourt} onBack={backToHome} />
+      )}
       <footer className="py-10 text-center text-sm text-gray-500">
         Built for modern food courts • Seamless browsing and ordering
       </footer>
